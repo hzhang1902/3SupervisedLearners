@@ -25,25 +25,31 @@ for raw_image in raw_images:
     images.append(image)
 
 # convert label to 1-hot encoding
+labels = raw_labels
+"""
 labels = np.zeros((IMAGE_NUM, LABEL_MAX + 1))
 labels[np.arange(IMAGE_NUM), raw_labels] = 1
+"""
 
 # split into 10 classes
 index_image = 0
-class_image = []
-class_label = []
+index_class = 0
 matrix_image = []
 matrix_label = []
+while index_class < 10:
+    class_image = []
+    class_label = []
+    matrix_image.append(class_image)
+    matrix_label.append(class_label)
+    index_class += 1
+
 while index_image < IMAGE_NUM:
-    class_image.append(images[index_image])
-    class_label.append(labels[index_image])
-    new_class = (index_image + 1) % (IMAGE_NUM / 10) == 0
-    if new_class:
-        matrix_image.append(class_image)
-        matrix_label.append(class_label)
-        class_image = []
-        class_label = []
+    label = labels[index_image]
+    matrix_image[label].append(images[index_image])
+    matrix_label[label].append(labels[index_image])
     index_image += 1
+
+
 
 # split into sets
 matrix_image_test = []
@@ -56,49 +62,28 @@ matrix_label_training = []
 index_class = 0
 while index_class < 10:
     index_image = 0
-    matrix_image_training_class = []
-    matrix_image_validation_class = []
-    matrix_image_test_class = []
 
-    matrix_label_training_class = []
-    matrix_label_validation_class = []
-    matrix_label_test_class = []
-
-    while index_image < IMAGE_NUM / 10:
+    class_size = matrix_image[index_class].__len__()
+    while index_image < class_size:
         image = matrix_image[index_class][index_image]
         label = matrix_label[index_class][index_image]
-        if index_image < IMAGE_NUM / 10 * 0.6:
-            matrix_image_training_class.append(image)
-            matrix_label_training_class.append(label)
-        elif index_image < IMAGE_NUM / 10 * 0.75:
-            matrix_image_validation_class.append(image)
-            matrix_label_validation_class.append(label)
+        if index_image < class_size * 0.6:
+            matrix_image_training.append(image)
+            matrix_label_training.append(label)
+        elif index_image < class_size * 0.75:
+            matrix_image_validation.append(image)
+            matrix_label_validation.append(label)
         else:
-            matrix_image_test_class.append(image)
-            matrix_label_test_class.append(label)
+            matrix_image_test.append(image)
+            matrix_label_test.append(label)
 
         index_image += 1
-
-    matrix_image_training.append(matrix_image_training_class)
-    matrix_image_validation.append(matrix_image_validation_class)
-    matrix_image_test.append(matrix_image_test_class)
-
-    matrix_label_training.append(matrix_label_training_class)
-    matrix_label_validation.append(matrix_label_validation_class)
-    matrix_label_test.append(matrix_label_test_class)
-
     index_class += 1
 
 
 # tests
 """
-print(matrix_label_training.__len__(),
-      matrix_label_training[0].__len__(),
-      matrix_label_training[0][0],
-      matrix_label_training[0][0].__len__())
+print(matrix_label_training.__len__(), matrix_label_validation.__len__())
 
-print(matrix_image_test.__len__(),
-      matrix_image_test[0].__len__(),
-      matrix_image_test[0][0],
-      matrix_image_test[0][0].__len__())
+print(matrix_image_test.__len__())
 """
