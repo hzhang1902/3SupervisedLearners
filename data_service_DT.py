@@ -25,8 +25,11 @@ for raw_image in raw_images:
     images.append(image)
 
 # convert label to 1-hot encoding
+labels = raw_labels
+"""
 labels = np.zeros((IMAGE_NUM, LABEL_MAX + 1))
 labels[np.arange(IMAGE_NUM), raw_labels] = 1
+"""
 
 # split into 10 classes
 index_image = 0
@@ -77,3 +80,9 @@ while index_class < 10:
         index_image += 1
     index_class += 1
 
+
+# tests
+"""
+print(matrix_label_training.__len__(), matrix_label_validation.__len__())
+print(matrix_image_test.__len__())
+"""

@@ -25,8 +25,7 @@ for raw_image in raw_images:
     images.append(image)
 
 # convert label to 1-hot encoding
-labels = np.zeros((IMAGE_NUM, LABEL_MAX + 1))
-labels[np.arange(IMAGE_NUM), raw_labels] = 1
+labels = raw_labels
 
 # split into 10 classes
 index_image = 0
